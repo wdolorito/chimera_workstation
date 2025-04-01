@@ -9,6 +9,7 @@ DEV="<brightnessctl -l | grep backlight | awk '{print $2}' | tr -d "\'">"
 X="$(pidof Xorg)"
 DISPFILE="$HOME/.bright"
 DISPVAL="0"
+DOOB=1
 
 if [ -z "$CMD" ]
 then
@@ -16,8 +17,15 @@ then
 	exit 127
 fi
 
-COMP="$(echo "$1" | tr '[:upper:]' '[:lower:]')"
+if [ -n "$2" ]
+then
+	if [ "$2" = "false" ]
+	then
+		DOOB=0
+	fi
+fi
 
+COMP="$(echo "$1" | tr '[:upper:]' '[:lower:]')"
 case "$COMP" in
 	"up" )
 		$CMD -qd $DEV  set +5%
@@ -46,7 +54,7 @@ then
 	echo "$DISPVAL" > "$DISPFILE"
 else
 	OBVAL="$(echo "$(echo $DISPVAL | tr -d '(%)')")"
-	if [ -p "$OBSOCK" ]
+	if [ -p "$OBSOCK" ] && [ "$DOOB" -eq 1 ]
 	then
 		echo "$OBVAL" > "$OBSOCK"
 	else

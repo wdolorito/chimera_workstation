@@ -26,3 +26,6 @@ swayidle -w \
 # Set up wob
 tail -f "$OBSOCK" | wob &
 echo "$(($! - 1))" > $OBSOCKPIDFN
+
+# Turn down brightness
+bright 30 false
