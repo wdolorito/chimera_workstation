@@ -7,7 +7,7 @@
 PACTL="$(which pactl 2>/dev/null)"
 if [ -z "$PACTL" ]
 then
-	printf "install a package that supplies the pactl utility\n" "$CMD"
+	printf "install a package that supplies the pactl utility\n"
 	exit 127
 fi
 
