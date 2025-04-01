@@ -1,0 +1,9 @@
+#
+# ~/.gitconfig
+#
+
+[user]
+	name = <full display name>
+	email = <user email>
+[core]
+	editor = nano

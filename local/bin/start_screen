@@ -1,0 +1,102 @@
+#!/bin/sh
+
+#
+# ~/local/bin/start_screen
+#
+
+SCREEN="$(which screen  2>/dev/null)"
+SESSION="main"
+HASSESSION=0
+
+if [ -z "$SCREEN" ]
+then
+	printf "%s utility not installed.\n" "$SCREEN"
+	exit 127
+fi
+
+screen_has_session() {
+	ALLSESSIONS="$(screen -ls | grep \( | awk '{print $1}' | cut -d '.' -f 2-)"
+
+	for FOUNDSESSION in $ALLSESSIONS
+	do
+		if [ "$FOUNDSESSION" = "$SESSION" ]
+		then
+			ASESSION="$FOUNDSESSION"
+			HASSESSION=1
+		fi
+	done
+}
+
+run_screen() {
+	if [ "$HASSESSION" -eq 1 ]
+	then
+		screen -r "$1"
+	else
+		screen -S "$1"
+	fi
+}
+
+find_and_print_detached() {
+	DETACHED="$(screen -ls | grep Detached | awk -F . '{print $2}' | awk '{print $1}')"
+
+	if [ -n "$DETACHED" ]
+	then
+		printf "\nThese are the currently available sessions:\n"
+		for ONESESS in $DETACHED
+		do
+			printf "\t* %s\n" "$ONESESS"
+		done
+	fi
+}
+
+bad_exit() {
+	if [ "$1" = "$SESSION" ]
+	then
+		printf "\nNot attaching to active session %s.\n"  "$1"
+	else
+		printf "\nNot creating session %s.  Already in session %s.\n" "$SESSION" "$1"
+	fi
+
+	printf "Detach from current session (Ctrl-a, d) and run \"%s" "$(basename "$0")"
+ 
+	 if [ -n "$1" ]
+	then
+		printf " %s" "$SESSION"
+	fi
+
+	printf "\" again.\n\n"
+	find_and_print_detached
+	exit 1
+}
+
+launch_it() {
+	screen_has_session   
+	run_screen "$1"
+	exit 0
+}
+
+if [ -n "$1" ]
+then
+	SESSION="$1"
+fi
+
+ATTACHED="$(screen -ls | grep Attached)"
+if [ -z "$ATTACHED" ]
+then
+		launch_it "$SESSION"
+else
+	ASESSIONS="$(echo "$ATTACHED" | awk '{print $1}' | cut -d '.' -f 2-)"
+	for ASESSION in $ASESSIONS
+	do
+		if [ "$ASESSION" = "$SESSION" ]
+		then
+			bad_exit "$ASESSION"
+		fi
+	done
+	if [ -z "$STY" ]
+	then
+		launch_it "$SESSION"
+	else
+		bad_exit "$(echo "$STY" | cut -d '.' -f 2-)"
+	fi
+fi

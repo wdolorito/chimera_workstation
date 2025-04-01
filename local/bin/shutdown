@@ -1,0 +1,44 @@
+#!/bin/sh
+
+#
+# ~/local/bin/shutdown
+#
+
+LOGINCTL="$(which loginctl 2>/dev/null)"
+SYSTEMCTL="$(which systemctl 2>/dev/null)"
+
+do_error() {
+	printf "\n%s does not exist, nor can we run it from %s\n\n" "$CMD" "$DOASFN"
+	exit 127
+}
+
+check_others() {
+	CMD="$SYSTEMCTL poweroff"
+	DOAS="$(which doas 2>/dev/null)"
+	DOASFN="/etc/doas.conf"
+
+	if [ -z "$DOAS" ]
+	then
+		if ! $CMD 2>/dev/null
+		then
+			printf "%s did not run properly.\n" "$CMD"
+			exit 1
+		fi
+	else
+		DOASCMD="$(grep "$(basename "$0")" "$DOASFN" | awk '{print $7}')"
+		if ! $DOAS "$DOASCMD" 2>/dev/null
+		then
+			printf "%s does not have opendoas permissions to run %s\n" "$(whoami)" "$CMD"
+			exit 1
+		fi
+	fi
+}
+
+if [ -n "$LOGINCTL" ] && ! [ -n "$SYSTEMCTL" ]
+then
+	$LOGINCTL poweroff
+	exit 0
+else
+	check_others
+	exit 0
+fi

@@ -1,0 +1,57 @@
+#!/bin/sh
+
+#
+# ~/local/bin/bright
+#
+
+CMD="$(which brightnessctl 2>/dev/null)"
+DEV="<brightnessctl -l | grep backlight | awk '{print $2}' | tr -d "\'">"
+X="$(pidof Xorg)"
+DISPFILE="$HOME/.bright"
+DISPVAL="0"
+
+if [ -z "$CMD" ]
+then
+	printf "install a package that supplies the brightnessctl utility\n"
+	exit 127
+fi
+
+COMP="$(echo "$1" | tr '[:upper:]' '[:lower:]')"
+
+case "$COMP" in
+	"up" )
+		$CMD -qd $DEV  set +5%
+		;;
+	"down" )
+		$CMD -qd $DEV set 5%-
+		;;
+	"off" )
+		$CMD -qsd $DEV
+		$CMD -qd $DEV set 0%
+		;;
+	"on" )
+		$CMD -qrd $DEV
+		;;
+		
+	[0-9]* )
+		$CMD -qd $DEV set "$COMP"%
+		;;
+	* )
+		;;
+esac
+
+DISPVAL="$($CMD -d $DEV | sed -n 2p | awk '{print $4}' | tr -d '()')"
+if [ -n "$X" ]
+then
+	echo "$DISPVAL" > "$DISPFILE"
+else
+	OBVAL="$(echo "$(echo $DISPVAL | tr -d '(%)')")"
+	if [ -p "$OBSOCK" ]
+	then
+		echo "$OBVAL" > "$OBSOCK"
+	else
+		echo "$OBVAL"
+	fi
+fi
+
+exit 0

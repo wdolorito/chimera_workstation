@@ -1,0 +1,56 @@
+#
+# /etc/apk/world
+#
+
+#
+# remove ALL comments in this file
+# add `ucode-amd` or `ucode-intel` for processor if necessary
+# run as root apk fix after copy to final location
+# then run apk upgrade --available --prune
+# dinitctl enable bluetoothd (for bluetooth)
+# dinitctl enable dhcpcd (for dhcp)
+# dinitctl enable iwd (for wirelesss)
+#   also usermod -a <user> network (so user can run commands with iwctl)
+# dinitctl enable syslog-ng (for system logging)
+#
+
+7zip
+base-full
+bluez
+brightnessctl
+curl
+fastfetch
+flatpak
+foot
+git
+hicolor-icon-theme
+imagemagick
+imv
+labwc
+libpulse-progs
+linux-stable
+lvm2
+mako
+mediainfo
+mpv
+opendoas
+pavucontrol
+pipewire
+screen
+swaybg
+swayidle
+swaylock
+syslog-ng
+# ucode-amd
+# ucode-intel
+waybar
+wdisplays
+wev
+wget
+wlopm
+wob
+wofi
+xdg-desktop-portal-gnome
+xdg-desktop-portal-kde
+xdg-desktop-portal-wlr
+zsh

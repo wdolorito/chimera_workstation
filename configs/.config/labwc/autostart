@@ -1,0 +1,28 @@
+#
+# ~/.config/labwc/autostart
+#
+
+
+# Reset user menus
+create_labwc_menus reset
+
+# Set background
+swaybg --image ~/Pictures/francesco-ungaro-8x4_rmUbTC4-unsplash.jpg  >/dev/null 2>&1 &
+
+# Launch waybar
+waybar >/dev/null 2>&1 &
+
+# Enable notifications
+mako >/dev/null 2>&1 &
+
+# Lock screen after 5 minutes; turn off display after another 5 minutes.
+swayidle -w \
+	timeout 300 'lock_session' \
+	timeout 600 'wlopm --off \*' \
+	resume 'wlopm --on \*' \
+	timeout 1200 'hybrid-sleep' \
+	before-sleep 'lock_session' >/dev/null 2>&1 &
+
+# Set up wob
+tail -f "$OBSOCK" | wob &
+echo "$(($! - 1))" > $OBSOCKPIDFN

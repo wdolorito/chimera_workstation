@@ -1,0 +1,47 @@
+#!/bin/sh
+
+#
+# ~/local/bin/hybrid-sleep
+#
+
+LOGINCTL="$(which loginctl 2>/dev/null)"
+LOCK="lock_session"
+
+do_lock() {
+	$LOCK
+	exit 0
+}
+
+check_others() {
+	CMD="systemctl hybrid-sleep"
+	DOAS="$(which doas  2>/dev/null)"
+	DOASFN="/etc/doas.conf"
+
+	if [ -z "$DOAS" ]
+	then
+		if ! $CMD 2>/dev/null
+		then
+			printf "%s did not run properly.\n" "$CMD"
+			exit 1
+		else
+			do_lock
+		fi
+	else
+		DOASCMD="$(grep "$(basename "$0")" "$DOASFN" | awk '{print $7}')"
+		if ! $DOAS "$DOASCMD" 2>/dev/null
+		then
+			printf "%s does not have opendoas permissions to run %s\n" "$(whoami)" "$CMD"
+			exit 1
+		else
+			do_lock
+		fi
+	fi
+}
+
+if [ -n "$LOGINCTL" ]
+then
+	$LOGINCTL hybrid-sleep
+	$LOCK
+else
+	check_others
+fi

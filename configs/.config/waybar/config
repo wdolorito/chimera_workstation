@@ -1,0 +1,60 @@
+{
+	"height": 30,
+	"modules-left": ["wlr/taskbar"],
+	"modules-right": ["idle_inhibitor", "wireplumber", "network", "cpu", "memory", "backlight", "battery", "custom/clock"],
+	"wlr/taskbar": {
+		"format": "{name}",
+		"tooltip": "{title}",
+		"on-click": "minimize-raise",
+		"rewrite": {
+			"VSCodium - URL Handler": "VSCodium"
+		}
+	},
+	"idle_inhibitor": {
+		"format": "{icon}",
+		"format-icons": {
+			"activated": "",
+			"deactivated": ""
+		}
+	},
+	"custom/clock": {
+		"exec": "date +'%a %d %B %Y %H:%M %Z'",
+		"interval": 1
+	},
+	"cpu": {
+		"format": "{usage}% ",
+		"tooltip": false
+	},
+	"memory": {
+		"format": "{}% "
+	},
+	"battery": {
+		"states": {
+			"good": 95,
+			"warning": 30,
+			"critical": 15
+		},
+		"format": "{capacity}% {icon}",
+		"format-charging": "{capacity}% ",
+		"format-plugged": "{capacity}% ",
+		"format-alt": "{time} {icon}",
+		"format-icons": ["", "", "", "", ""]
+	},
+	"network": {
+		"interface": "wlp1s0",
+		"format-wifi": "{essid} ({signalStrength}%) ",
+		"format-linked": "{ifname} (No IP) ",
+		"format-disconnected": "Disconnected ⚠",
+		"format-alt": "{ifname}: {ipaddr}/{cidr}"
+	},
+	"backlight": {
+		"device": "radeon_bl0",
+		"format": "{percent}% {icon}",
+		"format-icons":  ["", ""]
+	},
+	"wireplumber": {
+		"format": " {volume}%",
+		"format-muted": " ",
+		"on-click": "pavucontrol"
+	}
+}

@@ -1,0 +1,17 @@
+#!/bin/sh
+
+#
+# ~/local/bin/start_labwc
+#
+
+export OBSOCK="$(make_ob_sock)"
+export GTK_THEME="Adwaita:dark"
+export QT_QPA_PLATFORM="wayland"
+export MOZ_ENABLE_WAYLAND=1
+
+/usr/bin/labwc
+
+make_ob_sock destroy
+unset GTK_THEME
+unset QT_QPA_PLATFORM
+unset MOZ_ENABLE_WAYLAND

@@ -1,0 +1,34 @@
+#!/bin/sh
+
+#
+# ~/local/bin/dmesg
+#
+
+CMD="/bin/dmesg"
+DOAS="$(which doas 2>/dev/null)"
+
+if [ -e "$CMD" ] && [ -x "$CMD" ]
+then
+	if ! $CMD 2>/dev/null
+	then
+		if [ -n "$DOAS" ]
+		then
+			if ! $DOAS "$CMD" 2>/dev/null
+			then
+				printf "%s does not have opendoas permissions to run %s\n" "$(whoami)" "$CMD"
+				exit 1
+			fi
+		else
+			printf "unable to run %s directly and opendoas is not installed.\n" "$CMD"
+			exit 1
+		fi
+	else
+		printf "%s does not have permissions to run %s\n" "$(whoami)" "$CMD"
+		exit 1
+	fi
+else
+	printf "%s does not exist or cannot be run.\n" "$CMD"
+	exit 127
+fi
+
+exit 0

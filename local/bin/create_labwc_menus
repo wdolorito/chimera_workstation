@@ -1,0 +1,579 @@
+#!/bin/sh
+
+#
+# ~/local/bin/create_labwc_menus
+#
+
+APPFILES=""
+LINE=""
+TMPDIR="$(mktemp -d)"
+UNSORTED="$TMPDIR/raw.txt"
+SORTED="$TMPDIR/sorted_raw.txt"
+MENUFILE="$XDG_RUNTIME_DIR/menu.xml"
+TMPMENU="$TMPDIR/temp.xml"
+ONLYROOT="$XDG_RUNTIME_DIR/root.xml"
+CATEGORY=""
+BADCATEGORIES="GNOME GTK"
+BADBEGINCATEGORIES="X-"
+INDENT=0
+FULL=1
+
+clean_up() {
+	rm -rf "$TMPDIR"
+	exit 0
+}
+
+get_listing() {
+	for dir in $(echo "$XDG_DATA_DIRS" | sed 's/\:/\ /g')
+	do
+		if [ -d "$dir/applications" ]
+		then
+			FILES=$(ls "$dir/applications")
+			for file in $FILES
+			do
+				APPFILES="$APPFILES $dir/applications/$file"
+			done
+		fi
+	done  
+}
+
+test_category() {
+	if ! [ "$1" = "${1#"$BADBEGINCATEGORIES"}" ]
+	then
+		CATEGORY="bad"
+		return
+	fi
+	for BADCATEGORY in $BADCATEGORIES
+	do
+		if [ "$1" = "$BADCATEGORY" ] || [ "$1" = "" ]
+		then
+			CATEGORY="bad"
+			break
+		fi
+	done
+}
+
+parse_category() {
+	CATEGORY="bad"
+	CATEGORIES="$(grep ^Categories= "$1" | cut -d '=' -f 2- | sed 's/;/ /g')"
+	if [ -z "$CATEGORIES" ]
+	then
+		return
+	fi
+	while [ "$CATEGORY" = "bad" ]
+	do
+		for CAT in $CATEGORIES
+		do
+			CATEGORY="$CAT"
+			test_category "$CATEGORY"
+			if [ "$CATEGORY" != "bad" ]
+			then
+				break
+			fi
+		done
+	done
+}
+
+remove_unwanted_exec() {
+	EXEC="$(echo "$EXEC" | sed 's/\%U//g')"
+	EXEC="$(echo "$EXEC" | sed 's/\%u//g')"
+	EXEC="$(echo "$EXEC" | sed 's/\%F//g')"
+	EXEC="$(echo "$EXEC" | sed 's/\@\@u//g')"
+	EXEC="$(echo "$EXEC" | sed 's/\@\@//g')"
+	EXEC="$(echo "$EXEC" | awk '{$1=$1;print}')"
+}
+
+parse_files() {
+	for desktop in $APPFILES
+	do
+		NAME="$(grep ^Name= "$desktop" | head -n 1 | awk -F = '{print $2}')"
+		ICON="$(grep ^Icon= "$desktop" | head -n 1 | awk -F = '{print $2}')"
+
+		EXEC="$(grep ^Exec= "$desktop" | head -n 1 | cut -d = -f 2- )"
+		remove_unwanted_exec
+
+		parse_category "$desktop"
+
+		NODISPLAY="$(grep NoDisplay= "$desktop" | awk -F = '{print $2}')"
+		if [ "$CATEGORY" != "bad" ] && [ "$NODISPLAY" != "true" ]
+		then
+			printf "%s:%s:%s:%s\n" "$CATEGORY" "$NAME" "$ICON" "$EXEC" >> "$UNSORTED"
+		fi
+		NAME=""
+		ICON=""
+		EXEC=""
+		CATEGORY=""
+	done
+	sort > "$SORTED" < "$UNSORTED"
+}
+
+write_line() {
+	TOWRITE="$MENUFILE"
+	
+	if [ "$FULL" -eq 0 ]
+	then
+		TOWRITE="$ONLYROOT"
+	fi
+
+	if [ "$INDENT" -eq 0 ]
+	then
+		printf "%s\n" "$LINE" >> "$TOWRITE"
+	else
+		printf "%${INDENT}s%s\n" " " "$LINE" >> "$TOWRITE"
+	fi
+}
+
+return_open_file() {
+	LINE="<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+}
+
+return_blank_line() {
+	LINE=""
+}
+
+return_open_base_menu() {
+	LINE="<openbox_menu>"
+}
+
+return_close_base_menu() {
+	LINE="</openbox_menu>"  
+}
+
+return_open_pipe_menu() {
+	LINE="<openbox_pipe_menu>"
+}
+
+return_close_pipe_menu() {
+	LINE="</openbox_pipe_menu>"
+}
+
+return_open_menu() {
+	if [ -n "$4" ]
+	then
+		LINE="<menu id=\"$1\" label=\"$2\" icon=\"$3\" execute=\"$4\"/>"
+	else
+		if [ -n "$3" ]
+		then
+			LINE="<menu id=\"$1\" label=\"$2\" icon=\"$3\">"
+		else
+			if [ -n "$2" ]
+			then
+				LINE="<menu id=\"$1\" label=\"$2\">"
+			else
+				LINE="<menu id=\"$1\">"
+			fi
+		fi
+	fi
+}
+
+return_close_menu() {
+	LINE="</menu>"  
+}
+
+return_open_item() {
+	if [ -n "$2" ]
+	then
+		LINE="<item label=\"$1\" icon=\"$2\">"
+	else
+		LINE="<item label=\"$1\">"
+	fi
+}
+
+return_close_item() {
+	LINE="</item>"
+}
+
+return_action_line() {
+	if [ -n "$2" ]
+	then
+		LINE="<action name=\"$1\" command=\"$2\"/>"
+	else
+		LINE="<action name=\"$1\"/>"
+	fi
+}
+
+return_separator() {
+	if [ -n "$1" ]
+	then
+		LINE="<separator label=\"$1\"/>"
+	else
+		LINE="<separator />"
+	fi
+}
+
+reset_indent() {
+	INDENT=0
+}
+
+inc_indent() {
+	INDENT=$((INDENT + 1))
+}
+
+dec_indent() {
+	INDENT=$((INDENT - 1))
+	if [ "$INDENT" -lt 0 ]
+	then
+		reset_indent
+	fi
+}
+
+write_client_menu() {
+	return_open_menu "client-menu"
+	write_line
+	inc_indent
+
+	return_open_item "Minimize"
+	write_line
+	inc_indent
+	return_action_line "Iconify"
+	write_line
+	dec_indent
+	return_close_item
+	write_line
+
+	return_open_item "Maximize"
+	write_line
+	inc_indent
+	return_action_line "ToggleMaximize"
+	write_line
+	dec_indent
+	return_close_item
+	write_line
+
+	return_open_item "Fullscreen"
+	write_line
+	inc_indent
+	return_action_line "ToggleFullscreen"
+	write_line
+	dec_indent
+	return_close_item
+	write_line
+
+	return_open_item "Roll Up/Down"
+	write_line
+	inc_indent
+	return_action_line "ToggleShade"
+	write_line
+	dec_indent
+	return_close_item
+	write_line
+
+	return_open_item "Decorations"
+	write_line
+	inc_indent
+	return_action_line "ToggleDecorations"
+	write_line
+	dec_indent
+	return_close_item
+	write_line
+
+	return_open_item "Always on Top"
+	write_line
+	inc_indent
+	return_action_line "ToggleAlwaysOnTop"
+	write_line
+	dec_indent
+	return_close_item
+	write_line
+
+	return_blank_line
+	write_line
+	write_workspaces_menu
+	return_blank_line
+	write_line
+	write_client_send_to_menu
+
+	dec_indent
+	return_close_menu
+	write_line
+}
+
+write_workspaces_menu() {
+	return_open_menu "workspaces" "Workspace"
+	write_line
+	inc_indent
+
+	return_separator
+	write_line
+
+	return_open_item "Always on Visible Workspace"
+	write_line
+	inc_indent
+	return_action_line "ToggleOmnipresent"
+	write_line
+	dec_indent
+	return_close_item
+	write_line
+
+	dec_indent
+	return_close_menu
+	write_line
+}
+
+write_client_send_to_menu() {
+	return_open_menu "client-send-to-menu" "Send to..."
+	write_line
+	inc_indent
+
+	return_separator
+	write_line
+
+	return_open_item "Close"
+	write_line
+	inc_indent
+	return_action_line "Close"
+	write_line
+	dec_indent
+	return_close_item
+	write_line
+
+	dec_indent
+	return_close_menu
+	write_line
+}
+
+write_desktop_files_menus() {
+	if [ -z "$1" ]
+	then
+		return_open_menu "Programs" "Programs"
+		write_line
+		inc_indent
+	fi
+
+	get_listing
+	parse_files
+
+	OPEN_MENU=0
+	WROTE_OPEN=0
+	while IFS= read -r line
+	do
+		if [ "$OPEN_MENU" -eq 0 ]
+		then
+			CURR_CATEGORY="$(echo "$line" | awk -F ':' '{print $1}')"
+		fi
+		
+		CATEGORY="$(echo "$line" | awk -F ':' '{print $1}')"
+
+		NAME="$(echo "$line" | awk -F ':' '{print $2}')"
+		ICON="$(echo "$line" | awk -F ':' '{print $3}')"
+		EXEC="$(echo "$line" | awk -F ':' '{print $4}')"		
+				
+		if [ "$CATEGORY" != "$CURR_CATEGORY" ]
+		then
+			NEXTNAME="$NAME"
+			NEXTICON="$ICON"
+			NEXTEXEC="$EXEC"
+			return_close_menu
+			dec_indent
+			write_line
+			OPEN_MENU=0
+			WROTE_OPEN=0
+			OPEN_MENU=0
+			continue
+		else
+			OPEN_MENU=1
+		fi
+
+		if [ "$OPEN_MENU" -eq 1 ] && [ "$WROTE_OPEN" -eq 0 ]
+		then
+			return_open_menu "$CATEGORY" "$CATEGORY"
+			write_line
+			inc_indent
+			WROTE_OPEN=1
+		fi
+
+		if [ -n "$NEXTNAME" ]
+		then
+			return_open_item "$NEXTNAME" "$NEXTICON"
+			write_line
+			inc_indent
+			return_action_line "Execute" "$NEXTEXEC"
+			write_line
+			dec_indent
+			return_close_item
+			write_line
+			NEXTNAME=""
+			NEXTICON=""
+			NEXTEXEC=""
+		fi
+
+		return_open_item "$NAME" "$ICON"
+		write_line
+		inc_indent
+		return_action_line "Execute" "$EXEC"
+		write_line
+		dec_indent
+		return_close_item
+		write_line
+	done < "$SORTED"
+
+	if [ -n "$NEXTNAME" ]
+	then
+		return_open_item "$NEXTNAME" "$NEXTICON"
+		write_line
+		inc_indent
+		return_action_line "Execute" "$NEXTEXEC"
+		write_line
+		dec_indent
+		return_close_item
+		write_line
+	fi
+
+	return_close_menu
+	dec_indent
+	write_line
+
+	if [ -z "$1" ]
+	then
+		return_close_menu
+		dec_indent
+		write_line
+	fi
+}
+
+write_root_menu() {
+	return_open_item "Web browser"
+	write_line
+	inc_indent
+	return_action_line "Execute" "flatpak run one.ablaze.floorp"
+	write_line
+	dec_indent
+	return_close_item
+	write_line
+
+	return_open_item "Terminal"
+	write_line
+	inc_indent
+	return_action_line "Execute" "foot"
+	write_line
+	dec_indent
+	return_close_item
+	write_line
+
+	return_separator
+	write_line
+
+	if [ -z "$1" ]
+	then
+		write_desktop_files_menus "$1"
+	else
+		return_open_menu "" "Programs" "" "create_labwc_menus"
+		write_line
+	fi
+
+	return_separator
+	write_line
+
+	if [ -n "$1" ]
+	then
+		return_open_item "Reset Programs"
+		write_line
+		inc_indent
+		return_action_line "Execute" "create_labwc_menus reset"
+		write_line
+		dec_indent
+		return_close_item
+		write_line
+	fi
+
+	return_open_item "Reload config"
+	write_line
+	inc_indent
+	return_action_line "Reconfigure"
+	write_line
+	dec_indent
+	return_close_item
+	write_line
+
+	return_separator
+	write_line
+
+	return_open_item "Exit"
+	write_line
+	inc_indent
+	return_action_line "Exit"
+	write_line
+
+	dec_indent
+	return_close_item
+	write_line
+}
+
+return_full_menu() {
+	return_open_file
+	write_line
+
+	return_open_base_menu
+	write_line
+	inc_indent
+
+	write_client_menu
+	return_blank_line
+	write_line
+
+	return_open_menu "root-menu"
+	write_line
+	inc_indent
+	
+	write_root_menu "$1"
+
+	dec_indent
+	return_close_menu
+	write_line
+	
+	dec_indent
+	return_close_base_menu
+	write_line
+}
+
+output_root() {
+	if [ -s "$ONLYROOT" ]
+	then
+		cat "$ONLYROOT"
+	else
+		FULL=0
+		return_open_pipe_menu
+		write_line
+		inc_indent
+
+		write_desktop_files_menus "dynamic"
+
+		dec_indent
+		return_close_pipe_menu
+		write_line
+		output_root
+	fi
+}
+
+fix_spaces() {
+	unexpand -t 1 < "$1" > "$TMPMENU"
+	cp "$TMPMENU" "$MENUFILE"
+}
+
+case "$1" in
+	reset )
+		$0 delete
+		$0
+		;;
+	delete )
+		rm -f "$MENUFILE"
+		rm -f "$ONLYROOT"
+		;;
+	dynamic )
+		rm -f "$MENUFILE"
+		return_full_menu "dynamic"
+		fix_spaces "$MENUFILE"
+		printf "Your dynamic generated menu is at %s\n" "$MENUFILE"
+		;;
+	full )
+		rm -f "$MENUFILE"
+		return_full_menu
+		fix_spaces "$MENUFILE"
+		printf "Your full generated menu is at %s\n" "$MENUFILE"
+		;;
+	* )
+		output_root
+		;;
+esac
+
+clean_up

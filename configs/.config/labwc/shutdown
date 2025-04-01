@@ -1,0 +1,11 @@
+#
+# ~/.config/labwc/shutdown
+#
+
+# This file is executed as a shell script when labwc is preparing to terminate itself.
+# For further details see labwc-config(5).
+
+kill "$(cat $OBSOCKPIDFN)"
+rm -f $OBSOCKPIDFN
+
+create_labwc_menus delete
