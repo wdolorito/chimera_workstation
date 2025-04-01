@@ -3,7 +3,7 @@
 #
 
 # path
-if [ -z "$(echo "$PATH" | grep "$(whoami)")" ]
+if ! echo "$PATH" | grep "$(whoami)"
 then
 	export PATH="$HOME"/local/bin:"$PATH"
 fi
