@@ -7,4 +7,3 @@ This file needs ham.
 * flatpaks installed
 * no grub?
 * labwc menus
-* shellcheck
