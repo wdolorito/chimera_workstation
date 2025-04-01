@@ -28,32 +28,32 @@ fi
 COMP="$(echo "$1" | tr '[:upper:]' '[:lower:]')"
 case "$COMP" in
 	"up" )
-		$CMD -qd $DEV  set +5%
+		$CMD -qd "$DEV"  set +5%
 		;;
 	"down" )
-		$CMD -qd $DEV set 5%-
+		$CMD -qd "$DEV" set 5%-
 		;;
 	"off" )
-		$CMD -qsd $DEV
-		$CMD -qd $DEV set 0%
+		$CMD -qsd "$DEV"
+		$CMD -qd "$DEV" set 0%
 		;;
 	"on" )
-		$CMD -qrd $DEV
+		$CMD -qrd "$DEV"
 		;;
 		
 	[0-9]* )
-		$CMD -qd $DEV set "$COMP"%
+		$CMD -qd "$DEV" set "$COMP"%
 		;;
 	* )
 		;;
 esac
 
-DISPVAL="$($CMD -d $DEV | sed -n 2p | awk '{print $4}' | tr -d '()')"
+DISPVAL="$($CMD -d "$DEV" | sed -n 2p | awk '{print $4}' | tr -d '()')"
 if [ -n "$X" ]
 then
 	echo "$DISPVAL" > "$DISPFILE"
 else
-	OBVAL="$(echo "$(echo $DISPVAL | tr -d '(%)')")"
+	OBVAL="$(echo "$DISPVAL" | tr -d '(%)')"
 	if [ -p "$OBSOCK" ] && [ "$DOOB" -eq 1 ]
 	then
 		echo "$OBVAL" > "$OBSOCK"
