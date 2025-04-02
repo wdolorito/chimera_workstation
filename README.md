@@ -1,6 +1,5 @@
 This file needs ham.
 
-* ssh-agent
 * describe installataion
 * Chimera linux
 * no grub?

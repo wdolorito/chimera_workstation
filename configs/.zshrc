@@ -69,6 +69,11 @@ man() {
 			man "$@"
 }
 
+# ssh-agent
+export SSH_AUTH_SOCK="$HOME"/.ssh/ssh-agent.socket
+export SSH_ASKPASS_REQUIRE="never"
+"$HOME"/.ssh/add_ssh_keys
+
 if [ -z "$STY" ] && ! env | grep DISPLAY > /dev/null 2>&1
 then
 	start_screen
