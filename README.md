@@ -15,7 +15,7 @@ The trick is to specify a socket location when starting ```ssh-agent``` and expo
 
 The helper script lives in ~/.ssh/ so that the flatpak version of codium can be able to see it from its built-in shell.  Be sure to enable ```filesystem=home``` and ```socket=ssh-auth``` using Flatseal.
 
-Added keys will be removed after a timeout of 4 hours.  This value can be changed in ~/.ssh/config (AddKeysToAgent <timeout>) and in ```add_ssh_keys``` (TIMEOUT="<timeout>").  The annoyance of this setup is that the passphrase of the key, if set, will be prompted for every <timeout>.  The AddKeysToAgent option does make it less annoying, especially when codium throws a fit right when the 'Sync' button fails because the key has fallen out.  Close and then reopen the built-in shell, or start up one in labwc to refresh them, and it's good to go.
+Added keys will be removed after a timeout of 4 hours.  This value can be changed in ```add_ssh_keys``` (TIMEOUT="<timeout>").  The annoyance of this setup is that the passphrase of the key, if set, will be prompted for every <timeout>.  The AddKeysToAgent option does make it less annoying, especially when codium throws a fit right when the 'Sync' button fails because the key has fallen out.  Close and then reopen the built-in shell, put in the passphrase in the codium prompt, or start up one in labwc to refresh them, and it's good to go.
 
 # flatpak setup
 
