@@ -5,7 +5,19 @@ This file needs ham.
 * no grub?
 * labwc menus
 
-# Flatpak setup
+# ssh-agent shenanigans
+
+On previous non-DE distro setups (debian, devuan, void) in other repos, a nice thing was to store ssh keys in a keychain (gnome-keyring) so they could be unlocked after login.  Let's do something different and ditch an extra package.
+
+The nice thing is that ```ssh-agent``` is included in the openssh package and some hoops can be jumped through to share it between all open shells.  Running ```ssh-agent``` will create a socket, and spit out the socket location and the PID of that running agent.  We don't need all that mess.
+
+The trick is to specify a socket location when starting ```ssh-agent``` and exporting this value to subshells.  This is all handled by the script ```add_ssh_keys``` which needs to live in ~/.ssh/.  Two important environment variables are set in ```.zshrc``` and ```.shrc```, SSH_AUTH_SOCK and SSH_ASKPASS_REQUIRE.  The former should, hopefully, be self explanatory.  The latter is needed so that whichever terminal is open will receive the passphrase prompt.
+
+The helper script lives in ~/.ssh/ so that the flatpak version of codium can be able to see it from its built-in shell.  Be sure to enable ```filesystem=home``` and ```socket=ssh-auth``` using Flatseal.
+
+Added keys will be removed after a timeout of 4 hours.  This value can be changed in ~/.ssh/config (AddKeysToAgent <timeout>) and in ```add_ssh_keys``` (TIMEOUT="<timeout>").  The annoyance of this setup is that the passphrase of the key, if set, will be prompted for every <timeout>.  The AddKeysToAgent option does make it less annoying, especially when codium throws a fit right when the 'Sync' button fails because the key has fallen out.  Close and then reopen the built-in shell, or start up one in labwc to refresh them, and it's good to go.
+
+# flatpak setup
 
 Set up the following repos:
 
