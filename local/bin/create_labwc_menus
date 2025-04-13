@@ -70,6 +70,10 @@ parse_category() {
 			then
 				break
 			fi
+			if [ "$CATEGORY" = "bad" ]
+			then
+					CATEGORY=""
+			fi
 		done
 	done
 }
@@ -95,6 +99,11 @@ parse_files() {
 		parse_category "$desktop"
 
 		NODISPLAY="$(grep NoDisplay= "$desktop" | awk -F = '{print $2}')"
+		if [ -z "$CATEGORY" ]
+		then
+				NODISPLAY="true"
+		fi
+
 		if [ "$CATEGORY" != "bad" ] && [ "$NODISPLAY" != "true" ]
 		then
 			printf "%s:%s:%s:%s\n" "$CATEGORY" "$NAME" "$ICON" "$EXEC" >> "$UNSORTED"

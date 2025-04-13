@@ -2,6 +2,8 @@
 # ~/.config/labwc/autostart
 #
 
+# dbus
+dbus-update-activation-environment --all
 
 # Reset user menus
 create_labwc_menus reset
@@ -16,6 +18,7 @@ waybar >/dev/null 2>&1 &
 mako >/dev/null 2>&1 &
 
 # Lock screen after 5 minutes; turn off display after another 5 minutes.
+lock_session reset
 swayidle -w \
 	timeout 300 'lock_session' \
 	timeout 600 'wlopm --off \*' \
