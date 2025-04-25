@@ -14,5 +14,5 @@ org.gnome.gitlab.somas.Apostrophe
 org.horizon_eda.HorizonEDA
 org.inkscape.Inkscape
 org.libreoffice.LibreOffice
-org.remmina.Remmina
+org.virt_manager.virt-viewer
 uk.org.greenend.chiark.sgtatham.puzzles

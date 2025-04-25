@@ -51,7 +51,7 @@ This command isn't fully non-interactive. If a prompt shows up for an Extension 
 Use language extensions for codium:
 
 ```
-flatpak --user --override --environment="FLATPAK_ENABLE_SDK_EXT=llvm,node22,openjdk21"
+flatpak --user override --env="FLATPAK_ENABLE_SDK_EXT=llvm20,node22,openjdk21" com.vscodium.codium
 ```
 
 Additional applications with descriptions can be found here:
