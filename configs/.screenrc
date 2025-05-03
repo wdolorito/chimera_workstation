@@ -13,10 +13,12 @@ bind / eval "scrollback 0" "scrollback 100000"
 
 hardstatus alwayslastline 
 # Very nice tabbed colored hardstatus line
-hardstatus string '%{-}%-w[%{= 4b}%n %t%{-}]%+w %-= %{5b}%H %{-}|%{6b} %d/%M/%Y %{-}|%{2b} %C%A%{-} '
+hardstatus string '%{-}%-w[%{= 4b}%n %t%{-}]%+w %-= %{9b}%S %{-}|%{5b} %H %{-}|%{6b} %d/%M/%Y %{-}|%{2b} %C%A%{-} '
 
 # Hide hardstatus: ctrl-a f 
 bind f eval "hardstatus ignore"
 # Show hardstatus: ctrl-a F
 bind F eval "hardstatus alwayslastline"
 
+# turn off visual bell
+vbell "off"

@@ -11,4 +11,4 @@ HOST="$(hostname)"
 USERLINE="$USER"@"$HOST"
 LOCKMSG="Unlock Me"
 
-printf "\n\n\t%s\n\n\t%s\n\n\t%s\n" "$OSLINE" "$USERLINE" "$LOCKMSG"
+printf "\n\n%s\n\n%s\n\n%s\n" "$OSLINE" "$USERLINE" "$LOCKMSG"

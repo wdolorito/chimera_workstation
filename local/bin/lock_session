@@ -7,7 +7,7 @@
 IMAGEDIR="$HOME/Pictures"
 IMAGETXTFN="$IMAGEDIR/lock_image.txt"
 IMAGEPNGFN="$IMAGEDIR/lock_image.png"
-OFFSET="text 10,100"
+OFFSET="text 100,100"
 MAGICK="$(which magick 2>/dev/null)"
 IWIDTH="1280"
 IHEIGHT="720"
