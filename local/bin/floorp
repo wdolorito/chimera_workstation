@@ -1,0 +1,32 @@
+#!/bin/sh
+
+#
+# ~/local/bin/floorp
+#
+
+FLATPAK="$(which flatpak 2>/dev/null)"
+PKG="one.ablaze.floorp"
+
+do_err() {
+	printf "%b" "$1"
+	exit 127
+}
+
+if [ -z "$FLATPAK" ]
+then
+	do_err "\nflatpak not installed.\n\n"
+fi
+
+if ! $FLATPAK list | grep -q "$PKG"
+then
+	do_err "\n$PKG is not installed.\n\n"
+fi
+
+if env | grep -q DISPLAY
+then
+	$FLATPAK run "$PKG" "$@"
+	exit 0
+else
+	printf "\nNot in a graphical session.\n\n"
+	exit 1
+fi
