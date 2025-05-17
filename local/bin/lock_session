@@ -17,7 +17,6 @@ FONT="0xProto-Nerd-Font-Propo"
 PTSIZE="$((IHEIGHT / 25))"
 FONTFILL="white"
 SWAYLOCK="$(which swaylock 2>/dev/null)"
-X="$(pidof Xorg)"
 CONSOLELOCK="$(which vlock 2>/dev/null)"
 
 show_command_not_found() {
@@ -73,16 +72,11 @@ case "$1" in
 		generate_lock_image
 		;;
 	* )
-		if [ -n "$X" ]
+		if env | grep -q DISPLAY
 		then
-			lock_xorg
+			lock_wayland
 		else
-			if env | grep -q DISPLAY
-			then
-				lock_wayland
-			else
-				lock_console
-			fi
+			lock_console
 		fi
 		exit 0
 		;;
