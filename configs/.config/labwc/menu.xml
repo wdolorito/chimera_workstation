@@ -1,59 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openbox_menu>
- <menu id="client-menu">
-	 <item label="Minimize">
-		 <action name="Iconify"/>
-	 </item>
-	 <item label="Maximize">
-		 <action name="ToggleMaximize"/>
-	 </item>
-	 <item label="Fullscreen">
-		 <action name="ToggleFullscreen"/>
-	 </item>
-	 <item label="Roll Up/Down">
-		 <action name="ToggleShade"/>
-	 </item>
-	 <item label="Decorations">
-		 <action name="ToggleDecorations"/>
-	 </item>
-	 <item label="Always on Top">
-		 <action name="ToggleAlwaysOnTop"/>
-	 </item>
-	 
-	 <menu id="workspaces" label="Workspace">
-		 <separator />
-		 <item label="Always on Visible Workspace">
-			 <action name="ToggleOmnipresent"/>
-		 </item>
-	 </menu>
-	 
-	 <menu id="client-send-to-menu" label="Send to...">
-		 <separator />
-		 <item label="Close">
-			 <action name="Close"/>
-		 </item>
-	 </menu>
- </menu>
- 
- <menu id="root-menu">
-	 <item label="Web browser">
-		 <action name="Execute" command="flatpak run one.ablaze.floorp"/>
-	 </item>
-	 <item label="Terminal">
-		 <action name="Execute" command="foot"/>
-	 </item>
-	 <separator />
-	 <menu id="" label="Programs" icon="" execute="create_labwc_menus"/>
-	 <separator />
-	 <item label="Reset Programs">
-		 <action name="Execute" command="create_labwc_menus reset"/>
-	 </item>
-	 <item label="Reload config">
-		 <action name="Reconfigure"/>
-	 </item>
-	 <separator />
-	 <item label="Exit">
-		 <action name="Exit"/>
-	 </item>
- </menu>
+	<menu id="client-menu">
+		<item label="Minimize">
+			<action name="Iconify"/>
+		</item>
+		<item label="Maximize">
+			<action name="ToggleMaximize"/>
+		</item>
+		<item label="Fullscreen">
+			<action name="ToggleFullscreen"/>
+		</item>
+		<item label="Roll Up/Down">
+			<action name="ToggleShade"/>
+		</item>
+		<item label="Decorations">
+			<action name="ToggleDecorations"/>
+		</item>
+		<item label="Always on Top">
+			<action name="ToggleAlwaysOnTop"/>
+		</item>
+		
+		<menu id="workspaces" label="Workspace">
+			<separator />
+			<item label="Always on Visible Workspace">
+				<action name="ToggleOmnipresent"/>
+			</item>
+		</menu>
+		
+		<menu id="client-send-to-menu" label="Send to...">
+			<separator />
+			<item label="Close">
+				<action name="Close"/>
+			</item>
+		</menu>
+	</menu>
+
+	<menu id="root-menu">
+		<item label="Web browser">
+			<action name="Execute" command="flatpak run one.ablaze.floorp"/>
+		</item>
+		<item label="Terminal">
+			<action name="Execute" command="foot"/>
+		</item>
+		<separator />
+		<menu id="" label="Programs" icon="" execute="create_labwc_menus"/>
+		<separator />
+		<item label="Reset Programs">
+			<action name="Execute" command="create_labwc_menus reset"/>
+		</item>
+		<item label="Reload config">
+			<action name="Reconfigure"/>
+		</item>
+		<separator />
+		<item label="Exit">
+			<action name="Exit"/>
+		</item>
+	</menu>
 </openbox_menu>
