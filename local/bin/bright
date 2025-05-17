@@ -5,9 +5,7 @@
 #
 
 CMD="$(which brightnessctl 2>/dev/null)"
-DEV="<brightnessctl -l | grep backlight | awk '{print $2}' | tr -d "\'">"
-X="$(pidof Xorg)"
-DISPFILE="$HOME/.bright"
+DEV="$(brightnessctl -l | grep backlight | awk '{print $2}' | tr -d "\'")"
 DISPVAL="0"
 DOOB=1
 
@@ -48,18 +46,10 @@ case "$COMP" in
 		;;
 esac
 
-DISPVAL="$($CMD -d "$DEV" | sed -n 2p | awk '{print $4}' | tr -d '()')"
-if [ -n "$X" ]
+DISPVAL="$($CMD -d "$DEV" | sed -n 2p | awk '{print $4}' | tr -d '(%)')"
+if [ -p "$OBSOCK" ] && [ "$DOOB" -eq 1 ]
 then
-	echo "$DISPVAL" > "$DISPFILE"
+	echo "$DISPVAL" > "$OBSOCK"
 else
-	OBVAL="$(echo "$DISPVAL" | tr -d '(%)')"
-	if [ -p "$OBSOCK" ] && [ "$DOOB" -eq 1 ]
-	then
-		echo "$OBVAL" > "$OBSOCK"
-	else
-		echo "$OBVAL"
-	fi
+	echo "$DISPVAL"
 fi
-
-exit 0
