@@ -9,7 +9,7 @@ dbus-update-activation-environment --all
 create_labwc_menus reset
 
 # Set background
-swaybg --image ~/Pictures/francesco-ungaro-8x4_rmUbTC4-unsplash.jpg  >/dev/null 2>&1 &
+swaybg --image ~/Pictures/<some image>  >/dev/null 2>&1 &
 
 # Launch waybar
 waybar >/dev/null 2>&1 &
