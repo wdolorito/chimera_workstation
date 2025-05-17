@@ -1,15 +1,15 @@
 * {
 	border: none;
-	border-radius: 0;
-	font-family: Inconsolata;
+	border-radius: 0.5em;
+	font-family: Noto Sans;
 	font-size: 1em;
 	min-height: 0;
 }
 
 window#waybar {
-	background-color: rgba(43, 48, 59, 0.5);
-	border-bottom: 3px solid rgba(100, 114, 125, 0.5);
-	color: #ffffff;
+	background-color: rgba(206, 194, 255, 0.5);
+	border-bottom: 3px solid rgba(179, 179, 241, 0.5);
+	color: #000000;
 	transition-property: background-color;
 	transition-duration: .5s;
 }
@@ -18,47 +18,47 @@ window#waybar.hidden {
 	opacity: 0.2;
 }
 
-#clock,
+#backlight,
 #battery,
 #cpu,
+#custom-clock,
+#idle_inhibitor,
 #memory,
-#backlight,
 #network,
-#wireplumber,
-#idle_inhibitor {
+#wireplumber {
+	background-color: #CEC2FF;
 	padding: 0 10px;
 	margin: 0 4px;
-	color: #ffffff;
+}
+
+#taskbar button {
+	background-color: rgba(179, 179, 241, 0.5);
+	color: #000000
+}
+
+#taskbar button.active {
+	background-color: #DCB6D5;
+	color: #000000;
 }
 
 #window {
 	margin: 0 4px;
 }
 
-#clock {
-	background-color: #64727D;
-}
-
-#battery {
-	background-color: #ffffff;
-	color: #000000;
-}
-
 #battery.charging {
-	color: #ffffff;
-	background-color: #26A65B;
+	background-color: #DCB6D5;
 }
 
 @keyframes blink {
 	to {
-		background-color: #ffffff;
+		background-color: #CF8BA9;
 		color: #000000;
 	}
 }
 
 #battery.critical:not(.charging) {
-	background-color: #f53c3c;
-	color: #ffffff;
+	background-color: #B15E6C;
+	color: #FFFFFF;
 	animation-name: blink;
 	animation-duration: 0.5s;
 	animation-timing-function: linear;
@@ -66,46 +66,17 @@ window#waybar.hidden {
 	animation-direction: alternate;
 }
 
-label:focus {
-	background-color: #000000;
-}
-
-#cpu {
-	background-color: #2ecc71;
-	color: #000000;
-}
-
-#memory {
-	background-color: #9b59b6;
-}
-
-#backlight {
-   background-color: #90b1b1;
-}
-
-#network {
-	background-color: #2980b9;
-}
-
 #network.disconnected {
-	background-color: #f53c3c;
-}
-
-#wireplumber {
-	background-color: #f1c40f;
-	color: #000000;
+	background-color: #B15E6C;
+	color: #FFFFFF;
 }
 
 #wireplumber.muted {
-	background-color: #90b1b1;
-	color: #2a5c45;
-}
-
-#idle_inhibitor {
-	background-color: #2d3436;
+	background-color: #B15E6C;
+	color: #FFFFFF;
 }
 
 #idle_inhibitor.activated {
-	background-color: #ecf0f1;
-	color: #2d3436;
+	background-color: #B15E6C;
+	color: #FFFFFF;
 }
