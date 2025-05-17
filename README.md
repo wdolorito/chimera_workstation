@@ -14,7 +14,7 @@ Another conscious choice was the use of ```flatpak``` and Flathub (https://flath
 
 The other major choice was window manager.  While living in a console is super nerd and very appealing, ain't no way is ```emacs``` and ```vim``` a full desktop computing experience, no offense to those that go that route.  The choice was labwc (https://labwc.github.io/).  This differs from the preferences for debian (swaywm), devuan (wayfire) and void (rolling preference of swaywm, wayfire, labwc).  The commonality is the use of wayland.  And let's be honest, no typical user spends the majority of their time in a GUI-less operating system.  Try making a workflow using ```netsurf-fb```, ```mpv``` and ```fbi``` from a framebuffer console (if it's even avaialble).  Reading/editing a ```docx``` file or any common office file?  Doable, but good luck not getting lost in pipeland.  In general, the experience is at worst painful and at best inconvenient.
 
-One final note about these installation instructions, the sharp eyed will notice there is no bootloader installed (grub, refind, uboot, syslinux, \<insert favorite bootloader here\>).  This is because the particular installation these instructions are based on share space with another linux distribution (debian) that controls booting.  Adding this is easy with a simple ```apk add grub```.
+~~One final note about these installation instructions, the sharp eyed will notice there is no bootloader installed (grub, refind, uboot, syslinux, \<insert favorite bootloader here\>).  This is because the particular installation these instructions are based on share space with another linux distribution (debian) that controls booting.  Adding this is easy with a simple ```apk add grub```.~~
 
 The next question from that might perhaps be why isn't this installation the primary or only distribution on that system?  There is one utility not included because it doesn't seem to exist, ```lxc```, one of the reasons (among many) the use of debian has always been first choice for installations.  Why not something like ```docker``` or maybe ```qemu``` + ```virt-manager```?  The short story is, people like what they're comfortable with.  The partial long answer are personal biases against ```docker``` (what an lxc copy!) and the overhead of adding additional dependcies to run ```virt-manager```.  It's also easy to add these if desired.
 
@@ -46,7 +46,7 @@ Run in toplevel of repo to add a few useful default apps:
 for app in $(cat flatpak_apps.txt) ; do flatpak install flathub -y --noninteractive "$app" ; done
 ```
 
-This command isn't fully non-interactive. If a prompt shows up for an Extension , match the version of the previously installed Extensions.  If Xwayland running is an annoyance, a version installed from flathub-beta might have wayland support (GIMP 3.0 was only available there for a time).  Installed default apps listed in repo should all be wayland native.
+This command isn't fully non-interactive. If a prompt shows up for an Extension , match the version of the previously installed Extensions.  If Xwayland running is an annoyance, a version installed from flathub-beta might have wayland support (GIMP 3.0 was only available there for a time).  Installed default apps listed in repo should all be wayland supported/native.
 
 Use language extensions for codium:
 
