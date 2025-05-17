@@ -5,7 +5,7 @@
 #
 
 SCREEN="$(which screen  2>/dev/null)"
-SESSION="main"
+SESSION="$XDG_SEAT-$XDG_SESSION_ID"
 HASSESSION=0
 
 if [ -z "$SCREEN" ]
