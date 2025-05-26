@@ -112,6 +112,9 @@
 		<keybind key="W-XF86_AudioMute">
 			<action name="Execute" command="vol mic" />
 		</keybind>
+		<keybind key="XF86_AudioMicMute">
+			<action name="Execute" command="vol mic" />
+		</keybind>
 		<keybind key="XF86_MonBrightnessUp">
 			<action name="Execute" command="bright up" />
 		</keybind>
@@ -121,17 +124,32 @@
 		<keybind key="W-1">
 			<action name="GoToDesktop" to="1"/>
 		</keybind>
+		<keybind key="C-W-S-1">
+			<action name="SendToDesktop" to="1"/>
+		</keybind>
 		<keybind key="W-2">
 			<action name="GoToDesktop" to="2"/>
+		</keybind>
+		<keybind key="C-W-S-2">
+			<action name="SendToDesktop" to="2"/>
 		</keybind>
 		<keybind key="W-3">
 			<action name="GoToDesktop" to="3"/>
 		</keybind>
+		<keybind key="C-W-S-3">
+			<action name="SendToDesktop" to="3"/>
+		</keybind>
 		<keybind key="C-W-left">
 			<action name="GoToDesktop" to="left" wrap="yes" />
 		</keybind>
+		<keybind key="C-W-S-left">
+			<action name="SendToDesktop" to="left" />
+		</keybind>
 		<keybind key="C-W-right">
 			<action name="GoToDesktop" to="right" wrap="yes" />
+		</keybind>
+		<keybind key="C-W-S-right">
+			<action name="SendToDesktop" to="right" />
 		</keybind>
 		<keybind key="C-space">
 			<action name="Execute" command="makoctl dismiss" />
