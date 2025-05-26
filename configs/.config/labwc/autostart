@@ -9,7 +9,7 @@ dbus-update-activation-environment --all
 create_labwc_menus reset
 
 # Set background
-swaybg --image ~/Pictures/<some image>  >/dev/null 2>&1 &
+start_labwc background >/dev/null 2>&1 &
 
 # Launch waybar
 waybar >/dev/null 2>&1 &
@@ -18,17 +18,7 @@ waybar >/dev/null 2>&1 &
 mako >/dev/null 2>&1 &
 
 # Lock screen after 5 minutes; turn off display after another 5 minutes.
-lock_session reset
-swayidle -w \
-	timeout 300 'lock_session' \
-	timeout 600 'wlopm --off \*' \
-	resume 'wlopm --on \*' \
-	timeout 1200 'hybrid-sleep' \
-	before-sleep 'lock_session' >/dev/null 2>&1 &
-
-# Set up wob
-tail -f "$OBSOCK" | wob &
-echo "$(($! - 1))" > $OBSOCKPIDFN
+start_labwc idle >/dev/null 2>&1 &
 
 # Turn down brightness
 bright 30 false

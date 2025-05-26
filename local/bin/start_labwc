@@ -1,0 +1,57 @@
+#!/bin/sh
+
+#
+# ~/local/bin/start_labwc
+#
+
+BACKGROUND="$HOME/Pictures/<image>"
+OBSOCK="$(make_ob_sock)"
+GTK_THEME="Adwaita:dark"
+QT_QPA_PLATFORM="wayland"
+MOZ_ENABLE_WAYLAND=1
+
+run_session() {
+	export OBSOCK
+	export GTK_THEME
+	export QT_QPA_PLATFORM
+	export MOZ_ENABLE_WAYLAND
+	/usr/bin/labwc
+}
+
+reset_env() {
+	make_ob_sock destroy
+	do_ob clean
+	unset OBSOCK
+	unset GTK_THEME
+	unset QT_QPA_PLATFORM
+	unset MOZ_ENABLE_WAYLAND
+	clear
+}
+
+set_background() {
+	swaybg -i "$BACKGROUND"
+	exit 0
+}
+
+set_idle() {
+	lock_session reset
+	swayidle -w \
+		timeout 300 'lock_session' \
+		timeout 600 'wlopm --off \*' \
+		resume 'wlopm --on \*' \
+		timeout 1200 'hybrid-sleep'
+	exit 0
+}
+
+case "$1" in
+	idle )
+		set_idle
+		;;
+	background )
+		set_background
+		;;
+	* )
+		run_session
+		reset_env
+		;;
+esac
