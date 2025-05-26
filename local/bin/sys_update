@@ -1,0 +1,36 @@
+#!/bin/sh
+
+#
+# ~/local/bin/sys_update
+#
+
+CMD="/usr/bin/apk"
+DOAS="$(which doas 2>/dev/null)"
+OPTS=""
+
+if [ -e "$CMD" ] && [ -x "$CMD" ]
+then
+	if ! $CMD >/dev/null
+	then
+		if [ -n "$DOAS" ]
+		then
+			OPTS="upgrade --available --prune --no-interactive"
+			if ! $DOAS "$CMD" $OPTS 2>/dev/null
+			then
+				printf "%s does not have opendoas permissions to run %s\n" "$(whoami)" "$CMD"
+				exit 1
+			fi
+		else
+			printf "unable to run %s directly and opendoas is not installed.\n" "$CMD"
+			exit 1
+		fi
+	else
+		printf "%s does not have permissions to run %s\n" "$(whoami)" "$CMD"
+		exit 1
+	fi
+else
+	printf "%s does not exist or cannot be run.\n" "$CMD"
+	exit 127
+fi
+
+flatpak_update
