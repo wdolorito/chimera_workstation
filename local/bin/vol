@@ -43,9 +43,7 @@ fi
 
 if [ -p "$OBSOCK" ]
 then
-	echo "$DISPVAL" > "$OBSOCK"
+	do_ob "$DISPVAL"
 else
 	echo "$DISPVAL"
 fi
-
-exit 0

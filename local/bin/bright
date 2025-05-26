@@ -5,14 +5,21 @@
 #
 
 CMD="$(which brightnessctl 2>/dev/null)"
-DEV="$(brightnessctl -l | grep backlight | awk '{print $2}' | tr -d "\'")"
-DISPVAL="0"
+DEV=""
+DISPVAL=0
 DOOB=1
 
 if [ -z "$CMD" ]
 then
 	printf "install a package that supplies the brightnessctl utility\n"
 	exit 127
+fi
+
+DEV="$($CMD | tr -d \' | grep backlight | awk '{print $2}')"
+
+if ! [ -p "$OBSOCK" ]
+then
+	DOOB=0
 fi
 
 if [ -n "$2" ]
@@ -46,10 +53,11 @@ case "$COMP" in
 		;;
 esac
 
-DISPVAL="$($CMD -d "$DEV" | sed -n 2p | awk '{print $4}' | tr -d '(%)')"
-if [ -p "$OBSOCK" ] && [ "$DOOB" -eq 1 ]
+DISPVAL="$($CMD -d "$DEV" | sed -n 2p | awk '{print $4}' | tr -d '()')"
+if [ "$DOOB" -eq 1 ]
 then
-	echo "$DISPVAL" > "$OBSOCK"
+	OBVAL="$(echo "$DISPVAL" | tr -d '(%)')"
+	do_ob "$OBVAL"
 else
 	echo "$DISPVAL"
 fi
