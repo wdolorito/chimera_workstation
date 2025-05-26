@@ -4,7 +4,7 @@
 # ~/local/bin/dmesg
 #
 
-CMD="/bin/dmesg"
+CMD="/usr/bin/dmesg"
 DOAS="$(which doas 2>/dev/null)"
 
 if [ -e "$CMD" ] && [ -x "$CMD" ]
