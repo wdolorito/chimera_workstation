@@ -9,3 +9,5 @@ then
 fi
 
 export ENV="$HOME"/.shrc
+
+trap '. $HOME/.logout; exit' 0
