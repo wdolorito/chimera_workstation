@@ -83,7 +83,7 @@
 			<action name="NextWindow" />
 		</keybind>
 		<keybind key="W-Return">
-			<action name="Execute" command="foot" />
+			<action name="Execute" command="kitty" />
 		</keybind>
 		<keybind key="W-d">
 			<action name="Execute" command="wofi -GIS 'drun,run' --prompt=''" />

@@ -453,7 +453,7 @@ write_root_menu() {
 	return_open_item "Terminal"
 	write_line
 	inc_indent
-	return_action_line "Execute" "foot"
+	return_action_line "Execute" "kitty"
 	write_line
 	dec_indent
 	return_close_item
