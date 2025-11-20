@@ -64,6 +64,12 @@ or, search for useful apps using the command line:
 flatpak search <app>
 ```
 
+## dark mode
+```
+# open terminal in labwc and enter following for dark mode
+gsettings org.gnome.desktop.interface color-scheme 'prefer-dark'
+```
+
 ## jewels (?)
 
 The heavy lifting of this particular repo is done by the Chimera Linux team (https://chimera-linux.org).  All credit due to that group of folks supporting an amazing project.  Aside from the trivial config files for distro supplied applications, the "contribution" of this repo to the public at large could be the shell based ```create_labwc_menus``` script.  Written over the course of several obsession fueled days and lots of trial and error, this script will output a labwc, and through heritage, openbox, compatible ```menu.xml``` file.
