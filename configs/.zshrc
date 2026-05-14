@@ -5,8 +5,8 @@
 # fix for flatpak codium
 if [ "$SHELL" = "/bin/sh" ]
 then
-        export ENV="$HOME"/.shrc
-        exec sh
+	export ENV="$HOME"/.shrc
+	exec sh
 fi
 
 # history
