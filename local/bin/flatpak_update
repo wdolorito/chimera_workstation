@@ -7,7 +7,7 @@
 FLATPAK="$(which flatpak 2>/dev/null)"
 
 do_error() {
-	printf "\nPlease install flatpak utility\n\n"
+	echo "flatpak command not available."
 	exit 127
 }
 
