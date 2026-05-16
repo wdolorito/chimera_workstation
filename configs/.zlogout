@@ -2,12 +2,15 @@
 # ~/.zlogout
 #
 
-if [ -S "$SSH_AUTH_SOCK" ]
+if [ "$(loginctl list-sessions | grep -c "$(whoami)")" -eq 2 ]
 then
-	for AGENT in $(pgrep ssh-agent)
-	do
-		kill -TERM "$AGENT"
-	done
+	if [ -S "$SSH_AUTH_SOCK" ]
+	then
+		for AGENT in $(pgrep ssh-agent)
+		do
+			kill -TERM "$AGENT"
+		done
 
-	rm -f "$SSH_AUTH_SOCK"
+		rm -f "$SSH_AUTH_SOCK"
+	fi
 fi
