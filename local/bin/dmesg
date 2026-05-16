@@ -14,4 +14,3 @@ else
 	echo "sudo command not available."
 	exit 127
 fi
-
