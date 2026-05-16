@@ -4,31 +4,14 @@
 # ~/local/bin/dmesg
 #
 
-CMD="/usr/bin/dmesg"
-DOAS="$(which doas 2>/dev/null)"
+CMD="dmesg"
+SUDO="$(which sudo 2>/dev/null)"
 
-if [ -e "$CMD" ] && [ -x "$CMD" ]
+if [ -n "$SUDO" ]
 then
-	if ! $CMD 2>/dev/null
-	then
-		if [ -n "$DOAS" ]
-		then
-			if ! $DOAS "$CMD" 2>/dev/null
-			then
-				printf "%s does not have opendoas permissions to run %s\n" "$(whoami)" "$CMD"
-				exit 1
-			fi
-		else
-			printf "unable to run %s directly and opendoas is not installed.\n" "$CMD"
-			exit 1
-		fi
-	else
-		printf "%s does not have permissions to run %s\n" "$(whoami)" "$CMD"
-		exit 1
-	fi
+	$SUDO "$CMD"
 else
-	printf "%s does not exist or cannot be run.\n" "$CMD"
+	echo "sudo command not available."
 	exit 127
 fi
 
-exit 0
