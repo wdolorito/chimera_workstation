@@ -1,0 +1,31 @@
+#!/bin/sh
+
+#
+# ~/local/bin/sudo
+#
+
+DOAS="$(which doas)"
+PATH="/bin:/sbin"
+BCMD="$(which "$1")"
+
+if [ -n "$1" ]
+then
+	if [ -n "$BCMD" ]
+	then
+		if [ -n "$DOAS" ]
+		then
+			shift 1
+			$DOAS "$BCMD" "$@"
+		else
+			echo "doas not available."
+			exit 127
+		fi
+	else
+		echo "$1" "command not available."
+		exit 1
+	fi
+else
+	echo "Please pass a command to this script."
+	exit 1
+fi
+
