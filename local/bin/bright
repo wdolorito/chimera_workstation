@@ -11,7 +11,7 @@ DOOB=1
 
 if [ -z "$CMD" ]
 then
-	printf "install a package that supplies the brightnessctl utility\n"
+	echo "brightnessctl command not available."
 	exit 127
 fi
 
