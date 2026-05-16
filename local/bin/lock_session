@@ -39,7 +39,13 @@ lock_wayland() {
 }
 
 lock_console() {
-	$CONSOLELOCK -a
+	if [ "$TERM" = "linux" ]
+	then
+		$CONSOLELOCK -a
+	else
+		echo "Unable to lock consoles."
+		exit 1
+	fi
 }
 
 if env | grep -q DISPLAY
@@ -78,6 +84,5 @@ case "$1" in
 		else
 			lock_console
 		fi
-		exit 0
 		;;
 esac
