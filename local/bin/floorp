@@ -14,10 +14,10 @@ do_err() {
 
 if [ -z "$FLATPAK" ]
 then
-	do_err "\nflatpak not installed.\n\n"
+	do_err "\nflatpak command not available.\n\n"
 fi
 
-if ! $FLATPAK list | grep -q "$PKG"
+if ! $FLATPAK list | grep -q "$PKG" 2>/dev/null
 then
 	do_err "\n$PKG is not installed.\n\n"
 fi
@@ -25,8 +25,7 @@ fi
 if env | grep -q DISPLAY
 then
 	$FLATPAK run "$PKG" "$@"
-	exit 0
 else
-	printf "\nNot in a graphical session.\n\n"
+	echo "Not in a graphical session."
 	exit 1
 fi
