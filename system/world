@@ -4,6 +4,7 @@
 
 #
 # remove ALL comments in this file
+# add `linux-lts` or `linux-stable`
 # add `ucode-amd` or `ucode-intel` for processor if necessary
 # run as root apk fix after copy to final location
 # then run apk upgrade --available --prune
@@ -32,7 +33,8 @@ imv
 kitty
 labwc
 libpulse-progs
-linux-stable
+# linux-lts
+# linux-stable
 lsof
 lvm2
 mako

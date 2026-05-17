@@ -16,7 +16,7 @@ The other major choice was window manager.  While living in a console is super n
 
 ~~One final note about these installation instructions, the sharp eyed will notice there is no bootloader installed (grub, refind, uboot, syslinux, \<insert favorite bootloader here\>).  This is because the particular installation these instructions are based on share space with another linux distribution (debian) that controls booting.  Adding this is easy with a simple ```apk add grub```.~~
 
-The next question from that might perhaps be why isn't this installation the primary or only distribution on that system?  There is one utility not included because it doesn't seem to exist, ```lxc```, one of the reasons (among many) the use of debian has always been first choice for installations.  Why not something like ```docker``` or maybe ```qemu``` + ```virt-manager```?  The short story is, people like what they're comfortable with.  The partial long answer are personal biases against ```docker``` (what an lxc copy!) and the overhead of adding additional dependcies to run ```virt-manager```.  It's also easy to add these if desired.
+The next question from that might perhaps be why isn't this installation the primary or only distribution on that system?  ~~There is one utility not included because it doesn't seem to exist, ```lxc```, one of the reasons (among many) the use of debian has always been first choice for installations.~~ **(lxc is available, however there are problems I've yet to investigate more fully why unprivileged containers do not work as expected.)**  Why not something like ```docker``` or maybe ```qemu``` + ```virt-manager```?  The short story is, people like what they're comfortable with.  The partial long answer are personal biases against ```docker``` (what an lxc copy!) and the overhead of adding additional dependcies to run ```virt-manager```.  It's also easy to add these if desired.
 
 ## ssh-agent shenanigans
 
@@ -29,6 +29,27 @@ The trick is to specify a socket location when starting ```ssh-agent``` and expo
 The helper script lives in ~/.ssh/ so that the flatpak version of codium can be able to see it from its built-in shell.  Be sure to enable ```filesystem=home``` and ```socket=ssh-auth``` using Flatseal.
 
 Added keys will be removed after a timeout of 4 hours.  This value can be changed in ```add_ssh_keys``` (TIMEOUT="\<timeout\>").  The annoyance of this setup is that the passphrase of the key, if set, will be prompted every \<timeout\>.  The AddKeysToAgent option does make it less annoying, especially when codium throws a fit right when the 'Sync Changes' button fails because the key has fallen out.  Close and then reopen the built-in shell, put in the passphrase in the codium prompt, or start up a terminal in labwc to refresh them, and it's good to go.
+
+## root file copy
+**as root**
+```
+cd <path-to-repo>
+cp system/doas.conf /etc
+chmod 600 /etc/doas.conf
+cp /system/world /etc/apk # follow instructions in file, remove comments, enable services, etc
+usermod -aG "$(cat system/user_groups)" <user>
+```
+
+## user file copy
+
+```
+cd <path-to-repo>
+cp -r local ~/
+cp -r config/.config config/.ssh ~/
+cp -r config/.gitconfig config/.screenrc ~/
+cp config/.logout config/.profile config/.shrc ~/
+cp config/.zlogout config/.zprofile config/.zshrc ~/
+```
 
 ## flatpak setup
 
@@ -47,12 +68,6 @@ for app in $(cat flatpak_apps.txt) ; do flatpak install flathub -y --noninteract
 ```
 
 This command isn't fully non-interactive. If a prompt shows up for an Extension , match the version of the previously installed Extensions.  If Xwayland running is an annoyance, a version installed from flathub-beta might have wayland support (GIMP 3.0 was only available there for a time).  Installed default apps listed in repo should all be wayland supported/native.
-
-Use language extensions for codium:
-
-```
-flatpak --user override --env="FLATPAK_ENABLE_SDK_EXT=llvm20,node22,openjdk21" com.vscodium.codium
-```
 
 Additional applications with descriptions can be found here:
 
