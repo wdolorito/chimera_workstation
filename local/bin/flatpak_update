@@ -24,4 +24,3 @@ then
 fi
 
 do_update
-exit 0
