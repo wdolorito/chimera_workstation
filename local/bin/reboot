@@ -8,8 +8,7 @@ LOGINCTL="$(which loginctl)"
 
 if [ -n "$LOGINCTL" ]
 then
-	CMD="$LOGINCTL reboot"
-	$CMD
+	$LOGINCTL "reboot"
 else
 	echo "loginctl not available."
 	exit 127
