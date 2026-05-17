@@ -20,5 +20,5 @@ then
 	fi
 else
 	echo "loginctl not available."
-	exit 1
+	exit 127
 fi
