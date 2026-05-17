@@ -5,11 +5,13 @@
 #
 
 BACKGROUND="$HOME/Pictures/<image>"
+GTK_THEME="Adwaita:dark"
 OBSOCK="$(make_ob_sock)"
 QT_QPA_PLATFORM="wayland"
 MOZ_ENABLE_WAYLAND=1
 
 run_session() {
+	export GTK_THEME
 	export OBSOCK
 	export QT_QPA_PLATFORM
 	export MOZ_ENABLE_WAYLAND
@@ -17,6 +19,7 @@ run_session() {
 }
 
 reset_env() {
+	unset GTK_THEME
 	make_ob_sock destroy
 	do_ob clean
 	unset OBSOCK
@@ -27,7 +30,6 @@ reset_env() {
 
 set_background() {
 	swaybg -i "$BACKGROUND"
-	exit 0
 }
 
 set_idle() {
@@ -37,7 +39,6 @@ set_idle() {
 		timeout 600 'wlopm --off \*' \
 		resume 'wlopm --on \*' \
 		timeout 1200 'hybrid-sleep'
-	exit 0
 }
 
 case "$1" in
