@@ -34,7 +34,7 @@ get_listing() {
 				APPFILES="$APPFILES $dir/applications/$file"
 			done
 		fi
-	done  
+	done
 }
 
 test_category() {
@@ -118,7 +118,7 @@ parse_files() {
 
 write_line() {
 	TOWRITE="$MENUFILE"
-	
+
 	if [ "$FULL" -eq 0 ]
 	then
 		TOWRITE="$ONLYROOT"
@@ -176,7 +176,7 @@ return_open_menu() {
 }
 
 return_close_menu() {
-	LINE="</menu>"  
+	LINE="</menu>"
 }
 
 return_open_item() {
