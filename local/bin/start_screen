@@ -10,12 +10,12 @@ HASSESSION=0
 
 if [ -z "$SCREEN" ]
 then
-	printf "%s utility not installed.\n" "$SCREEN"
+	echo "screen not available."
 	exit 127
 fi
 
 screen_has_session() {
-	ALLSESSIONS="$(screen -ls | grep \( | awk '{print $1}' | cut -d '.' -f 2-)"
+	ALLSESSIONS="$($SCREEN -ls | grep \( | awk '{print $1}' | cut -d '.' -f 2-)"
 
 	for FOUNDSESSION in $ALLSESSIONS
 	do
@@ -30,14 +30,14 @@ screen_has_session() {
 run_screen() {
 	if [ "$HASSESSION" -eq 1 ]
 	then
-		screen -r "$1"
+		$SCREEN -r "$1"
 	else
-		screen -S "$1"
+		$SCREEN -S "$1"
 	fi
 }
 
 find_and_print_detached() {
-	DETACHED="$(screen -ls | grep Detached | awk -F . '{print $2}' | awk '{print $1}')"
+	DETACHED="$($SCREEN -ls | grep Detached | awk -F . '{print $2}' | awk '{print $1}')"
 
 	if [ -n "$DETACHED" ]
 	then
@@ -72,7 +72,6 @@ bad_exit() {
 launch_it() {
 	screen_has_session   
 	run_screen "$1"
-	exit 0
 }
 
 if [ -n "$1" ]
@@ -80,7 +79,7 @@ then
 	SESSION="$1"
 fi
 
-ATTACHED="$(screen -ls | grep Attached)"
+ATTACHED="$($SCREEN -ls | grep Attached)"
 if [ -z "$ATTACHED" ]
 then
 		launch_it "$SESSION"
