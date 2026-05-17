@@ -20,7 +20,6 @@ FULL=1
 
 clean_up() {
 	rm -rf "$TMPDIR"
-	exit 0
 }
 
 get_listing() {
