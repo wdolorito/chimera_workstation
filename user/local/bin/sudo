@@ -4,7 +4,7 @@
 # ~/local/bin/sudo
 #
 
-DOAS="$(which doas)"
+DOAS="$(which doas 2>/dev/null)"
 PATH="/bin:/sbin"
 BCMD="$(which "$1")"
 
