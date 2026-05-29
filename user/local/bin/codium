@@ -1,0 +1,40 @@
+#!/bin/sh
+
+#
+# ~/local/bin/codium
+#
+
+FLATPAK="$(which flatpak 2>/dev/null)"
+INSTALLED=""
+PKG="com.vscodium.codium"
+
+launch() {
+	case "$XDG_SESSION_TYPE" in
+		"wayland" )
+			$FLATPAK run "$PKG" --ozone-platform=wayland "$@"
+			;;
+		"x11" )
+			$FLATPAK run "$PKG" "$@"
+			;;
+		* )
+			echo "Not in a graphical session."
+			exit 1
+			;;
+	esac
+}
+
+if [ -z "$FLATPAK" ]
+then
+	echo "flatpak command not available."
+	exit 127
+else
+	INSTALLED="$($FLATPAK list | grep $PKG)"
+
+	if [ -n "$INSTALLED" ]
+	then
+		launch "$@"
+	else
+		echo "codium flatpak not installed."
+		exit 127
+	fi
+fi
