@@ -70,14 +70,15 @@ man() {
 }
 
 # ssh-agent
-if [ -z "$SSH_AUTH_SOCK" ]
+if [ -z "$SSH_AUTH_SOCK" ] && ! [ "$TERM_PROGRAM" = "vscode" ]
 then
 	export SSH_AUTH_SOCK="$HOME"/.ssh/ssh-agent.socket
 	export SSH_ASKPASS_REQUIRE="never"
 fi
+
 "$HOME"/.ssh/add_ssh_keys
 
-if [ -z "$STY" ] && ! env | grep DISPLAY > /dev/null 2>&1
+if [ -z "$STY" ] && [ "$XDG_SESSION_TYPE" = "tty" ]
 then
 	start_screen
 fi
