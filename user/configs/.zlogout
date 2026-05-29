@@ -2,7 +2,7 @@
 # ~/.zlogout
 #
 
-if [ "$(loginctl list-sessions | grep -c "$(whoami)")" -eq 2 ]
+if [ -z "$STY" ] && [ "$(loginctl list-sessions | grep -c "$(whoami)")" -eq 2 ]
 then
 	if [ -S "$SSH_AUTH_SOCK" ]
 	then
