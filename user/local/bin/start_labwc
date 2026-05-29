@@ -6,22 +6,29 @@
 
 BACKGROUND="$HOME/Pictures/<image>"
 GTK_THEME="Adwaita:dark"
-OBSOCK="$(make_ob_sock)"
+OBSOCK="$(make_ob_sock 2>/dev/null)"
 QT_QPA_PLATFORM="wayland"
 MOZ_ENABLE_WAYLAND=1
+LABWC="$(which labwc 2>/dev/null)"
 
 run_session() {
-	export GTK_THEME
-	export OBSOCK
-	export QT_QPA_PLATFORM
-	export MOZ_ENABLE_WAYLAND
-	/usr/bin/labwc
+	if [ -n "$LABWC" ]
+	then
+		export GTK_THEME
+		export OBSOCK
+		export QT_QPA_PLATFORM
+		export MOZ_ENABLE_WAYLAND
+		$LABWC
+	else
+		echo "labwc command not available."
+		exit 127
+	fi
 }
 
 reset_env() {
 	unset GTK_THEME
-	make_ob_sock destroy
-	do_ob clean
+	make_ob_sock destroy 2>/dev/null
+	do_ob clean 2>/dev/null
 	unset OBSOCK
 	unset QT_QPA_PLATFORM
 	unset MOZ_ENABLE_WAYLAND
@@ -29,16 +36,16 @@ reset_env() {
 }
 
 set_background() {
-	swaybg -i "$BACKGROUND"
+	swaybg -i "$BACKGROUND" 2>/dev/null
 }
 
 set_idle() {
-	lock_session reset
+	lock_session reset 2>/dev/null
 	swayidle -w \
 		timeout 300 'lock_session' \
 		timeout 600 'wlopm --off \*' \
 		resume 'wlopm --on \*' \
-		timeout 1200 'hybrid-sleep'
+		timeout 1200 'hybrid-sleep' 2>/dev/null
 }
 
 case "$1" in
